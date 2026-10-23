@@ -89,6 +89,7 @@ const staticFiles = new Map([
     ["/login.html", ["login.html", "text/html; charset=utf-8"]],
     ["/privacy.html", ["privacy.html", "text/html; charset=utf-8"]],
     ["/auth.js", ["auth.js", "text/javascript; charset=utf-8"]],
+    ["/auth-guard.js", ["auth-guard.js", "text/javascript; charset=utf-8"]],
     ["/index.html", ["index.html", "text/html; charset=utf-8"]],
     ["/script.js", ["script.js", "text/javascript; charset=utf-8"]],
     ["/style.css", ["style.css", "text/css; charset=utf-8"]]

@@ -6,6 +6,7 @@
     <title>DisasterReady PH</title>
 
     <link rel="stylesheet" href="style.css">
+    <script src="auth-guard.js"></script>
     <link
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -54,14 +55,6 @@ const aiAssistant = document.getElementById("ai-assistant");
 const minimizeAiButton = document.getElementById("minimize-ai");
 const closeAiButton = document.getElementById("close-ai");
 const reopenAiButton = document.getElementById("reopen-ai");
-const signOut = document.getElementById("logoutButton");
-
-signOut.addEventListener("click", function() {
-  if (confirm("Are you sure you want to sign out?")) {
-    window.location.href = "/login.html";
-  }
-});
-
 minimizeAiButton.addEventListener("click", function() {
   const isMinimized = aiAssistant.classList.toggle("ai-minimized");
   minimizeAiButton.setAttribute("aria-expanded", String(!isMinimized));
@@ -614,7 +607,6 @@ function escapeHTML(text) {
 </footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="script.js?v=20261023-leaflet"></script>
 
 </body>
 </html>

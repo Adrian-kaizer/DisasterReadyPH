@@ -9,16 +9,28 @@ if errorlevel 1 (
     exit /b 1
 )
 
-powershell -NoProfile -Command "$listeners = Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue; if ($listeners | Where-Object { $_.LocalAddress -eq '0.0.0.0' }) { exit 0 } elseif ($listeners) { exit 2 } else { exit 1 }"
-if errorlevel 2 (
-    echo A server that is not shareable is already using port 3000.
-    echo Close its server window, then run start-app.bat again.
+call :checkServer
+if errorlevel 1 (
+    start "DisasterReady PH server" /D "%~dp0" cmd /k "node server.js"
+
+    for /L %%I in (1,1,15) do (
+        timeout /t 1 /nobreak >nul
+        call :checkServer
+        if not errorlevel 1 goto openApp
+    )
+
+    echo The app server did not start at http://127.0.0.1:3000.
+    echo Check the "DisasterReady PH server" window for the startup error.
     pause
     exit /b 1
 )
-if errorlevel 1 (
-    start "DisasterReady PH server" /D "%~dp0" cmd /k "node server.js"
-    timeout /t 2 /nobreak >nul
-)
 
+goto openApp
+
+:checkServer
+node -e "fetch('http://127.0.0.1:3000/api/session').then(response => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))" >nul 2>nul
+exit /b %errorlevel%
+
+:openApp
 start "" "http://127.0.0.1:3000/"
+exit /b 0

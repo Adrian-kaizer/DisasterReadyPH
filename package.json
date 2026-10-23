@@ -1,0 +1,16 @@
+{
+  "name": "disasterready-ph",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.5"
+  },
+  "scripts": {
+    "build": "node build.js",
+    "start": "node server.js",
+    "dev": "npx --yes netlify-cli@23.15.1 dev"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2"
+  }
+}

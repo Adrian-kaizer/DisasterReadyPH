@@ -1,0 +1,6 @@
+.env
+.netlify
+dist/
+node_modules/
+database/*.sqlite
+database/*.sqlite-*

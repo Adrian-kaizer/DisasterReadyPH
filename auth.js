@@ -17,6 +17,9 @@ let mode = "login";
 if (new URLSearchParams(window.location.search).get("deleted") === "1") {
     message.textContent = "Your account and profile picture have been permanently deleted.";
     message.classList.add("auth-message-success");
+} else if (new URLSearchParams(window.location.search).get("server") === "unavailable") {
+    message.textContent =
+        "Unable to connect to the app service. Please try again in a moment.";
 }
 
 togglePasswordButton.addEventListener("click", () => {
@@ -83,9 +86,9 @@ authForm.addEventListener("submit", async event => {
         window.location.assign("/");
     } catch {
         message.textContent =
-            "Can't connect to the app server. Ask the app host to start it with " +
-            "start-app.bat and share the server address. Don't use Live Server " +
-            "or open login.html directly.";
+            "Unable to connect to the app service. If this is a local install, " +
+            "start it with start-app.bat. For a hosted site, try again later or " +
+            "contact the site administrator.";
     } finally {
         submitButton.disabled = false;
         submitButton.textContent = mode === "register"

@@ -22,16 +22,18 @@
             DisasterReady PH is a student project prototype. This policy
             describes what information the app handles and how it is used.
             The app is not an official government emergency service. When
-            shared over a local network, the host computer runs the app server
-            and stores account information in its local database.
+            run locally, the host computer stores account information in its
+            SQLite database. When deployed to Netlify, account information is
+            stored in the project's configured Neon PostgreSQL database.
         </p>
 
         <h2>Information stored by the app</h2>
         <ul>
             <li>
                 <strong>Account information:</strong> your email address and a
-                salted password hash are stored in the app's SQLite database.
-                Your plain-text password is not stored.
+                salted password hash are stored in the configured app database
+                (local SQLite or hosted Neon PostgreSQL). Your plain-text
+                password is not stored.
             </li>
             <li>
                 <strong>Profile picture:</strong> if you upload one, the image
@@ -39,9 +41,8 @@
             </li>
             <li>
                 <strong>Session information:</strong> when you sign in, the
-                app uses an HTTP-only session cookie to keep you signed in.
-                Session records are held in server memory and expire after
-                eight hours.
+                app uses an HTTP-only session cookie and a server-side session
+                record to keep you signed in. Sessions expire after eight hours.
             </li>
             <li>
                 <strong>Browser-only information:</strong> emergency checklist
@@ -97,6 +98,8 @@
             browser storage through your browser's site-data controls. The
             local-network demo uses unencrypted HTTP; only share it with people
             on a trusted Wi-Fi/LAN and never enter real or reused passwords.
+            Netlify deployments should use HTTPS and keep the Neon connection
+            string in Netlify's private environment-variable settings.
         </p>
 
         <h2>Children and sensitive information</h2>
