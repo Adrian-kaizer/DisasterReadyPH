@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="same-origin">
+    <title>Sign in | DisasterReady PH</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+    <main class="auth-card">
+        <a class="auth-brand" href="/login.html" aria-label="DisasterReady PH home">
+            <span aria-hidden="true">🛡️</span>
+            <span>DisasterReady <strong>PH</strong></span>
+        </a>
+
+        <p class="eyebrow">COMMUNITY PREPAREDNESS</p>
+        <h1 id="auth-title">Welcome back</h1>
+        <p class="auth-description" id="auth-description">
+            Sign in to continue to your disaster readiness dashboard.
+        </p>
+
+        <div class="auth-tabs" role="group" aria-label="Account action">
+            <button id="show-login" type="button" class="active"
+                aria-pressed="true">Sign in</button>
+            <button id="show-register" type="button" aria-pressed="false">
+                Create account
+            </button>
+        </div>
+
+        <form id="auth-form">
+            <label for="auth-email">Email address</label>
+            <input id="auth-email" name="email" type="email" required
+                maxlength="254" autocomplete="email"
+                placeholder="you@example.com">
+
+            <label for="auth-password">Password</label>
+            <div class="password-input-wrap">
+                <input id="auth-password" name="password" type="password"
+                    required maxlength="128" autocomplete="current-password"
+                    placeholder="Enter your password">
+                <button id="toggle-password" class="password-toggle"
+                    type="button" aria-label="Show password"
+                    aria-controls="auth-password" aria-pressed="false">
+                    Show
+                </button>
+            </div>
+
+            <p id="password-hint" class="password-hint" hidden>
+                Use at least 12 characters. Passwords are stored as salted
+                hashes and cannot be recovered.
+            </p>
+
+            <p id="auth-message" class="auth-message" aria-live="polite"></p>
+            <button id="auth-submit" type="submit" class="primary-button">
+                Sign in
+            </button>
+        </form>
+
+        <p class="auth-safety-note">
+            Demo only. Share access only with people on the same Wi-Fi/LAN.
+            This connection is not encrypted; do not use real or reused passwords.
+        </p>
+        <p class="auth-safety-note">
+            Read our <a href="/privacy.html">Privacy Policy</a>.
+        </p>
+        </main>
+    <script src="auth.js"></script>
+</body>
+</html>

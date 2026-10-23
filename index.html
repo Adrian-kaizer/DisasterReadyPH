@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DisasterReady PH</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+</head>
+
+<body>
+
+<!-- Disaster Ready PH AI Assistant -->
+<div id="ai-assistant">
+  <div class="ai-assistant-header">
+    <div>
+      <strong>🌊 Disaster Ready PH AI</strong>
+      <small>Water Level &amp; Flood Safety Assistant</small>
+    </div>
+    <div class="ai-window-controls">
+      <button id="minimize-ai" type="button" aria-label="Minimize chat"
+        aria-expanded="true" aria-controls="ai-content">−</button>
+      <button id="close-ai" type="button" aria-label="Close chat">×</button>
+    </div>
+  </div>
+
+  <div id="ai-content">
+    <div id="ai-messages">
+      <p><b>AI Assistant:</b> Hello! Ask me about water levels,
+      flood risks, or disaster preparedness.</p>
+    </div>
+
+    <form id="ai-form">
+      <input id="ai-input" type="text"
+        placeholder="Ask about flood safety..."
+        required>
+      <button type="submit">Send</button>
+    </form>
+  </div>
+</div>
+<button id="reopen-ai" type="button" aria-controls="ai-assistant" hidden>
+  🌊 Open DisasterReady AI
+</button>
+
+<script>
+const aiForm = document.getElementById("ai-form");
+const aiInput = document.getElementById("ai-input");
+const aiMessages = document.getElementById("ai-messages");
+const aiAssistant = document.getElementById("ai-assistant");
+const minimizeAiButton = document.getElementById("minimize-ai");
+const closeAiButton = document.getElementById("close-ai");
+const reopenAiButton = document.getElementById("reopen-ai");
+
+minimizeAiButton.addEventListener("click", function() {
+  const isMinimized = aiAssistant.classList.toggle("ai-minimized");
+  minimizeAiButton.setAttribute("aria-expanded", String(!isMinimized));
+  minimizeAiButton.setAttribute(
+    "aria-label",
+    isMinimized ? "Expand chat" : "Minimize chat"
+  );
+});
+
+closeAiButton.addEventListener("click", function() {
+  aiAssistant.classList.add("ai-hidden");
+  reopenAiButton.hidden = false;
+});
+
+reopenAiButton.addEventListener("click", function() {
+  aiAssistant.classList.remove("ai-hidden");
+  reopenAiButton.hidden = true;
+});
+
+aiForm.addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  const question = aiInput.value.trim().toLowerCase();
+  if (!question) return;
+
+  aiMessages.innerHTML +=
+    "<p><b>You:</b> " + escapeHTML(aiInput.value) + "</p>";
+
+  let answer;
+
+  if (question.includes("water level") ||
+      question.includes("centimeter") ||
+      question.includes("cm")) {
+    answer = "Check the latest water-level reading from a verified " +
+      "sensor or local disaster office. Follow official alerts and " +
+      "evacuate when instructed.";
+  } else if (question.includes("flood") ||
+             question.includes("rising water")) {
+    answer = "Move to higher ground if water is rising. Avoid walking " +
+      "or driving through floodwater and follow local evacuation orders.";
+  } else if (question.includes("emergency") ||
+             question.includes("evacuate")) {
+    answer = "Follow instructions from your local disaster risk " +
+      "reduction office. Prepare an emergency bag, keep your phone " +
+      "charged, and move to a safe location when advised.";
+  } else if (question.includes("prepare") ||
+             question.includes("emergency kit")) {
+    answer = "Prepare drinking water, food, medicines, a flashlight, " +
+      "a power bank, important documents in waterproof packaging, " +
+      "and a first-aid kit.";
+  } else if (question.includes("safe")) {
+    answer = "Stay informed through official PAGASA and local " +
+      "disaster office advisories. Keep away from rivers and " +
+      "flooded roads during heavy rain.";
+  } else {
+    answer = "I can help with flood safety, rising water, emergency " +
+      "kits, and evacuation guidance. Ask me one of these questions.";
+  }
+
+  aiMessages.innerHTML +=
+    "<p><b>AI Assistant:</b> " + escapeHTML(answer) + "</p>";
+
+  aiMessages.scrollTop = aiMessages.scrollHeight;
+  aiInput.value = "";
+});
+
+function escapeHTML(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+}
+</script>
+
+<header class="topbar">
+    <div class="brand">
+        <span class="brand-icon">🛡️</span>
+        <div>
+            <h1>DisasterReady <span>PH</span></h1>
+            <p>Watching every drop, protecting every property.</p>
+        </div>
+    </div>
+
+    <button class="menu-button" id="menuButton"
+        aria-label="Toggle navigation" aria-expanded="false">
+        ☰
+    </button>
+
+    <nav id="navigation">
+        <a href="#dashboard">Dashboard</a>
+        <a href="#evacuation">Evacuation</a>
+        <a href="#flood-monitor">Manage Stations</a>
+        <a href="#checklist">Checklist</a>
+        <a href="#hotlines">Hotlines</a>
+        <a href="#report">Report Hazard</a>
+        <div class="user-profile" id="userProfile">
+            <div class="profile-avatar">
+                <span id="profileInitials" aria-hidden="true">?</span>
+                <img id="profilePicture" alt="Your profile picture" hidden>
+            </div>
+            <div class="profile-details">
+                <span id="profileEmail">Your account</span>
+                <span id="profileRole" class="profile-role" hidden>Admin</span>
+                <label for="profilePictureInput" class="profile-upload-button">
+                    Add photo
+                </label>
+                <input id="profilePictureInput" type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    aria-label="Choose a profile picture">
+                <span id="profilePictureStatus" class="profile-picture-status"
+                    aria-live="polite"></span>
+                <details class="account-settings">
+                    <summary>Account settings</summary>
+                    <form id="deleteAccountForm" class="delete-account-form">
+                        <p>
+                            Permanently delete your account and profile picture.
+                            Information saved only in this browser will remain.
+                        </p>
+                        <label for="deleteAccountPassword">Confirm your password</label>
+                        <input id="deleteAccountPassword" name="password"
+                            type="password" autocomplete="current-password"
+                            required maxlength="128">
+                        <label for="deleteAccountConfirmation">
+                            Type DELETE to confirm
+                        </label>
+                        <input id="deleteAccountConfirmation" name="confirmation"
+                            type="text" autocomplete="off" required>
+                        <p id="deleteAccountMessage" aria-live="polite"></p>
+                        <button type="submit" class="delete-account-button">
+                            Delete my account
+                        </button>
+                    </form>
+                </details>
+            </div>
+        </div>
+        <button id="logoutButton" type="button" class="nav-logout">
+            Sign out
+        </button>
+    </nav>
+</header>
+
+<main class="container">
+    <div class="page-view active" data-page="dashboard">
+
+        <!-- WEATHER MONITORING SECTION -->
+        <section id="weather-section" class="weather-section">
+
+    <div class="weather-heading">
+        <div>
+            <h2>🌦️ Current Conditions</h2>
+            <p>See the latest weather where you are, or choose another location.</p>
+        </div>
+        <span id="weather-status">Connecting...</span>
+    </div>
+
+    <form id="weather-search-form" class="weather-search" autocomplete="off">
+        <div class="location-input-wrap">
+        <input
+            type="text"
+            id="weather-location"
+            placeholder="Enter a city or municipality"
+            value="Manila"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-controls="location-suggestions"
+            aria-expanded="false"
+            aria-label="Choose a weather location"
+        >
+        <div id="location-suggestions" class="location-suggestions"
+             role="listbox" hidden></div>
+        </div>
+        <button id="search-weather" type="submit">Search</button>
+        <button id="use-location" type="button">📍 My Location</button>
+    </form>
+
+    <h3 id="location-name">Weather in Manila</h3>
+    <p id="weather-updated">Waiting for weather data...</p>
+
+    <div class="weather-grid">
+
+        <div class="weather-card">
+            <span>🌡️</span>
+            <h4>Temperature</h4>
+            <p><strong id="temperature">--</strong> °C</p>
+        </div>
+
+        <div class="weather-card">
+            <span>🌧️</span>
+            <h4>Rainfall</h4>
+            <p><strong id="rainfall">--</strong> mm</p>
+        </div>
+
+        <div class="weather-card">
+            <span>☔</span>
+            <h4>Rain Probability</h4>
+            <p><strong id="rain-probability">--</strong>%</p>
+        </div>
+
+        <div class="weather-card">
+            <span>💨</span>
+            <h4>Wind Speed</h4>
+            <p><strong id="wind-speed">--</strong> km/h</p>
+        </div>
+
+    </div>
+
+    <div id="weather-alert" class="weather-alert">
+        Retrieving current weather conditions...
+    </div>
+
+    <p class="weather-disclaimer">
+        Weather data provided by
+        <a href="https://open-meteo.com/" target="_blank"
+           rel="noopener noreferrer">Open-Meteo</a>.
+        Weather conditions alone do not determine actual flood risk.
+        Follow official local disaster advisories.
+    </p>
+
+</section>
+
+    <section class="welcome" id="dashboard">
+        <div>
+            <p class="eyebrow">PHILIPPINE DISASTER PREPAREDNESS</p>
+            <h2>Be prepared.<br>Protect your community.</h2>
+            <p>
+                Get prepared for typhoons, floods, earthquakes,
+                and other emergencies.
+            </p>
+            <a href="#checklist" class="primary-button">
+                Prepare Your Emergency Kit
+            </a>
+        </div>
+        <div class="welcome-icon">🌏</div>
+    </section>
+
+    <section class="notice" aria-live="polite">
+        <strong>⚠️ DEMO MODE</strong>
+        <p>
+            This student prototype does not provide verified live disaster alerts.
+            Follow official government announcements during emergencies.
+        </p>
+    </section>
+
+    <section class="section-heading">
+        <div>
+            <p class="eyebrow">QUICK ACCESS</p>
+            <h2>Emergency Information</h2>
+        </div>
+    </section>
+
+    <section class="card-grid">
+        <article class="info-card">
+            <div class="card-icon">🌧️</div>
+            <h3>Weather Preparedness</h3>
+            <p>Prepare for heavy rain, typhoons, and possible flooding.</p>
+            <a href="https://www.pagasa.dost.gov.ph/"
+               target="_blank" rel="noopener noreferrer">
+                Visit PAGASA →
+            </a>
+        </article>
+
+        <article class="info-card">
+            <div class="card-icon">🌊</div>
+            <h3>Flood Monitoring</h3>
+            <p>Record water levels and check monitoring station status.</p>
+            <a href="#flood-monitor">Monitor Water Levels →</a>
+        </article>
+
+        <article class="info-card">
+            <div class="card-icon">🎒</div>
+            <h3>Emergency Kit</h3>
+            <p>Prepare essential supplies before a disaster happens.</p>
+            <a href="#checklist">Open Checklist →</a>
+        </article>
+    </section>
+
+    </div>
+
+    <section class="content-section page-view" data-page="evacuation" id="evacuation">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">FIND SAFER LOCATIONS</p>
+                <h2>Evacuation Centers Map</h2>
+            </div>
+        </div>
+
+        <p class="section-description">
+            Enter a city or barangay to explore its map. Map results are not
+            verified evacuation centers; confirm designated facilities with
+            your LGU or barangay.
+        </p>
+
+        <div class="search-row">
+            <input type="text" id="locationSearch"
+                placeholder="Enter a city or barangay"
+                aria-label="Search city or barangay">
+            <button id="searchButton" class="primary-button">
+                Search Map
+            </button>
+        </div>
+
+        <div id="map" role="region"
+             aria-label="Interactive map"></div>
+
+        <div id="mapMessage" class="status-message" aria-live="polite">
+            Loading the evacuation map...
+        </div>
+        <p class="small-note">
+            Always confirm evacuation instructions through official local authorities.
+        </p>
+    </section>
+
+    <!-- FLOOD MONITORING FEATURE -->
+    <section class="content-section page-view" data-page="stations" id="flood-monitor">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">WATER LEVEL MONITORING</p>
+                <h2>🌊 Flood Monitoring Assistant</h2>
+            </div>
+        </div>
+
+        <p class="section-description">
+            Add a monitoring station, record its water height, and let the
+            assistant classify the reading using your configured thresholds.
+        </p>
+
+        <div class="flood-stats">
+            <article class="flood-stat">
+                <span>Monitoring Stations</span>
+                <strong id="stationCount">0</strong>
+            </article>
+            <article class="flood-stat warning-card">
+                <span>Warning Stations</span>
+                <strong id="warningCount">0</strong>
+            </article>
+            <article class="flood-stat critical-card">
+                <span>Critical Stations</span>
+                <strong id="criticalCount">0</strong>
+            </article>
+        </div>
+
+        <h3>Add or Update a Monitoring Station</h3>
+
+        <form id="stationForm" class="report-form">
+            <label for="stationName">Station Name</label>
+            <input id="stationName" type="text" required
+                maxlength="80" placeholder="e.g. River Station 1">
+
+            <label for="stationLocation">Barangay or City</label>
+            <input id="stationLocation" type="text" required
+                maxlength="120" placeholder="e.g. Barangay San Isidro">
+
+            <label for="waterLevel">Current Water Height (meters)</label>
+            <input id="waterLevel" type="number" min="0"
+                max="100" step="0.01" required placeholder="e.g. 1.25">
+
+            <label for="warningLevel">Warning Threshold (meters)</label>
+            <input id="warningLevel" type="number" min="0.01"
+                max="100" step="0.01" required value="1.50">
+
+            <label for="criticalLevel">Critical Threshold (meters)</label>
+            <input id="criticalLevel" type="number" min="0.02"
+                max="100" step="0.01" required value="2.00">
+
+            <button type="submit" class="primary-button">
+                Save Water Reading
+            </button>
+        </form>
+
+        <div class="assistant-panel" aria-live="polite">
+            <h3>🤖 Monitoring Assistant</h3>
+            <p id="assistantMessage">
+                No monitoring data yet. Add a station to begin.
+            </p>
+            <p class="small-note">
+                The assistant uses predefined rules; it is not a trained AI
+                prediction model. Readings are entered manually, not collected
+                from live sensors.
+            </p>
+        </div>
+
+        <h3 class="reports-heading">Monitoring Stations</h3>
+        <div id="stationList" class="reports-list"></div>
+
+        <h3 class="reports-heading">Recent Water-Level Readings</h3>
+        <div class="chart-wrap">
+            <canvas id="waterChart" height="220"
+                aria-label="Water level history chart"></canvas>
+        </div>
+
+        <p class="small-note">
+            Readings are stored in this browser only. Real-time monitoring
+            requires a connected sensor and shared online database. The
+            prototype is not an official flood warning or evacuation system.
+        </p>
+    </section>
+
+    <section class="content-section page-view" data-page="checklist" id="checklist">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">BE READY</p>
+                <h2>Emergency Kit Checklist</h2>
+            </div>
+            <span id="progress">0 of 7 completed</span>
+        </div>
+
+        <p class="section-description">
+            Check the supplies you have already prepared.
+        </p>
+
+        <div class="checklist" id="checklistItems">
+            <label class="check-item">
+                <input type="checkbox" data-item="Water">
+                <span>💧 Drinking water</span>
+            </label>
+            <label class="check-item">
+                <input type="checkbox" data-item="Food">
+                <span>🥫 Ready-to-eat food</span>
+            </label>
+            <label class="check-item">
+                <input type="checkbox" data-item="First Aid">
+                <span>🩹 First-aid kit and essential medicines</span>
+            </label>
+            <label class="check-item">
+                <input type="checkbox" data-item="Flashlight">
+                <span>🔦 Flashlight and spare batteries</span>
+            </label>
+            <label class="check-item">
+                <input type="checkbox" data-item="Power Bank">
+                <span>🔋 Charged power bank</span>
+            </label>
+            <label class="check-item">
+                <input type="checkbox" data-item="Documents">
+                <span>📄 Important documents in a waterproof bag</span>
+            </label>
+            <label class="check-item">
+                <input type="checkbox" data-item="Hygiene">
+                <span>🧼 Hygiene supplies and extra clothing</span>
+            </label>
+        </div>
+
+        <div class="progress-track">
+            <div id="progressBar"></div>
+        </div>
+
+        <button id="resetChecklist" class="secondary-button">
+            Reset Checklist
+        </button>
+    </section>
+
+    <section class="content-section page-view" data-page="hotlines" id="hotlines">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">KEEP THESE ACCESSIBLE</p>
+                <h2>Emergency Contacts</h2>
+            </div>
+        </div>
+
+        <div class="card-grid">
+            <article class="info-card">
+                <div class="card-icon">🚑</div>
+                <h3>Emergency Hotline</h3>
+                <p>911 — Philippine national emergency hotline.</p>
+                <a href="tel:911">Call 911</a>
+            </article>
+
+            <article class="info-card">
+                <div class="card-icon">🌦️</div>
+                <h3>PAGASA</h3>
+                <p>Official weather forecasts and tropical cyclone updates.</p>
+                <a href="https://www.pagasa.dost.gov.ph/"
+                   target="_blank" rel="noopener noreferrer">
+                    Official Website →
+                </a>
+            </article>
+
+            <article class="info-card">
+                <div class="card-icon">🆘</div>
+                <h3>Office of Civil Defense</h3>
+                <p>National disaster preparedness and response information.</p>
+                <a href="https://ocd.gov.ph/"
+                   target="_blank" rel="noopener noreferrer">
+                    Official Website →
+                </a>
+            </article>
+        </div>
+
+        <p class="small-note">
+            Confirm local emergency numbers with your LGU. Calling links may
+            not work on desktop computers.
+        </p>
+    </section>
+
+    <section class="content-section page-view" data-page="report" id="report">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">COMMUNITY PARTICIPATION</p>
+                <h2>Report a Hazard</h2>
+            </div>
+        </div>
+
+        <p class="section-description">
+            Record flooding, fallen trees, blocked roads, or damaged infrastructure.
+            Reports are stored only in this browser and are not automatically
+            sent to emergency responders.
+        </p>
+
+        <form id="hazardForm" class="report-form">
+            <label for="reporterLocation">Location</label>
+            <input type="text" id="reporterLocation"
+                placeholder="City or barangay" required>
+
+            <label for="hazardType">Type of Hazard</label>
+            <select id="hazardType" required>
+                <option value="">Select a hazard</option>
+                <option value="Flooding">Flooding</option>
+                <option value="Fallen Tree">Fallen Tree</option>
+                <option value="Blocked Road">Blocked Road</option>
+                <option value="Landslide">Possible Landslide</option>
+                <option value="Damaged Infrastructure">Damaged Infrastructure</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label for="hazardDescription">Description</label>
+            <textarea id="hazardDescription" rows="4"
+                placeholder="Describe what you observed" required></textarea>
+
+            <button type="submit" class="primary-button">
+                Submit Hazard Report
+            </button>
+        </form>
+
+        <div id="reportMessage" aria-live="polite"></div>
+
+        <h3 class="reports-heading">Recent Reports</h3>
+        <div id="reportsList" class="reports-list"></div>
+
+        <p class="small-note">
+            Reports are unverified. For immediate danger, contact emergency
+            services directly. Do not include private information.
+        </p>
+    </section>
+
+</main>
+
+<footer>
+    <h3>🛡️ DisasterReady PH</h3>
+    <p>Helping Filipino communities prepare for emergencies.</p>
+    <p>Student project prototype — not an official emergency service.</p>
+    <p><a href="/privacy.html">Privacy Policy</a></p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="script.js?v=20261023-leaflet"></script>
+
+</body>
+</html>

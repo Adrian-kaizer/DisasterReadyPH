@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="same-origin">
+    <title>Privacy Policy | DisasterReady PH</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="policy-page">
+    <main class="policy-card">
+        <a class="auth-brand" href="/" aria-label="DisasterReady PH home">
+            <span aria-hidden="true">🛡️</span>
+            <span>DisasterReady <strong>PH</strong></span>
+        </a>
+
+        <p class="eyebrow">YOUR INFORMATION</p>
+        <h1>Privacy Policy</h1>
+        <p class="policy-updated">Last updated: October 23, 2026</p>
+
+        <p>
+            DisasterReady PH is a student project prototype. This policy
+            describes what information the app handles and how it is used.
+            The app is not an official government emergency service. When
+            shared over a local network, the host computer runs the app server
+            and stores account information in its local database.
+        </p>
+
+        <h2>Information stored by the app</h2>
+        <ul>
+            <li>
+                <strong>Account information:</strong> your email address and a
+                salted password hash are stored in the app's SQLite database.
+                Your plain-text password is not stored.
+            </li>
+            <li>
+                <strong>Profile picture:</strong> if you upload one, the image
+                and its format are stored with your account.
+            </li>
+            <li>
+                <strong>Session information:</strong> when you sign in, the
+                app uses an HTTP-only session cookie to keep you signed in.
+                Session records are held in server memory and expire after
+                eight hours.
+            </li>
+            <li>
+                <strong>Browser-only information:</strong> emergency checklist
+                progress, manually entered monitoring stations/readings, and
+                hazard reports are saved in this browser's local storage.
+                They are not uploaded to this app's server and are not sent to
+                emergency responders.
+            </li>
+        </ul>
+
+        <h2>Location, weather, and map services</h2>
+        <p>
+            Weather location searches use Open-Meteo's geocoding service and
+            request weather forecasts using the selected coordinates. Map
+            searches are sent through this app's server to OpenStreetMap's
+            Nominatim service, and map tiles are provided by OpenStreetMap.
+            These services receive the requests needed to provide their
+            features, including the location search or coordinates requested.
+            Open-Meteo and Nominatim see this app server's network address for
+            proxied requests. OpenStreetMap receives tile requests from your
+            browser, including its network address.
+        </p>
+        <p>
+            If you choose “My Location,” your browser asks permission to share
+            your device location with this page. The app uses the coordinates
+            to request local weather; it does not save those coordinates to
+            your account.
+        </p>
+        <p>
+            The app loads the Leaflet map library from unpkg. These external
+            providers have their own privacy practices and terms.
+        </p>
+
+        <h2>How information is used and retained</h2>
+        <p>
+            Account and profile information is used to provide sign-in and
+            account features. It remains in the app database until you delete
+            your account using Account settings. Deleting your account removes
+            the account and its profile picture. Browser-only information
+            remains on your device until you clear this site's browser data.
+        </p>
+        <p>
+            The app does not sell your information or use it for advertising.
+            The prototype does not provide a way to send reports to emergency
+            services.
+        </p>
+
+        <h2>Security and your choices</h2>
+        <p>
+            Passwords are stored as salted hashes, and session cookies are
+            HTTP-only. Do not use a password you rely on for another service.
+            You can remove your account from Account settings and clear
+            browser storage through your browser's site-data controls. The
+            local-network demo uses unencrypted HTTP; only share it with people
+            on a trusted Wi-Fi/LAN and never enter real or reused passwords.
+        </p>
+
+        <h2>Children and sensitive information</h2>
+        <p>
+            Do not enter sensitive personal information in hazard reports or
+            other free-text fields. The prototype is not designed to collect
+            information from children.
+        </p>
+
+        <h2>Changes and contact</h2>
+        <p>
+            This policy may be updated as the prototype changes. The project
+            currently does not publish a dedicated privacy contact address.
+        </p>
+
+        <a class="primary-button policy-back" href="/">Back to DisasterReady PH</a>
+    </main>
+</body>
+</html>
